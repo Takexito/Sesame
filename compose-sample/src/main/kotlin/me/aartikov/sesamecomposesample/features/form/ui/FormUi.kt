@@ -2,24 +2,27 @@ package me.aartikov.sesamecomposesample.features.form.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
 import me.aartikov.sesame.compose.form.control.CheckControl
 import me.aartikov.sesame.compose.form.control.InputControl
+import me.aartikov.sesame.compose.form.options.KeyboardCapitalization
+import me.aartikov.sesame.compose.form.options.KeyboardOptions
+import me.aartikov.sesame.compose.form.options.KeyboardType
 import me.aartikov.sesamecomposesample.R
 import me.aartikov.sesamecomposesample.core.theme.AppTheme
 import me.aartikov.sesamecomposesample.features.form.ui.widgets.CheckboxField
@@ -39,6 +42,8 @@ fun FormUi(
     ) {
         BoxWithConstraints(Modifier.fillMaxSize()) {
             KonfettiWidget(maxWidth, component.dropKonfettiEvent, modifier)
+
+            val submitButtonState by component.submitButtonState.collectAsState()
 
             val scrollState = rememberScrollState()
             Column(
@@ -87,7 +92,7 @@ fun FormUi(
                     text = stringResource(R.string.submit_button),
                     onClick = component::onSubmitClicked,
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = colorResource(id = component.submitButtonState.color),
+                        backgroundColor = colorResource(id = submitButtonState.color),
                     ),
                     modifier = Modifier.padding(top = 8.dp)
                 )
@@ -129,7 +134,7 @@ class FakeFormComponent : FormComponent {
 
     override val termsCheckBox = CheckControl()
 
-    override val submitButtonState = SubmitButtonState.Valid
+    override val submitButtonState = MutableStateFlow(SubmitButtonState.Valid)
 
     override val dropKonfettiEvent: Flow<Unit> = flow { }
 

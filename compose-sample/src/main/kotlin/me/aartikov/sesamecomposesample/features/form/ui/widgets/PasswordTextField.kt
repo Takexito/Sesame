@@ -20,7 +20,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import kotlinx.coroutines.flow.collectLatest
 import me.aartikov.sesame.compose.form.control.InputControl
-import me.aartikov.sesamecomposesample.core.utils.resolve
+import me.aartikov.sesamecomposesample.features.form.ui.asCompose
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -39,7 +39,11 @@ fun PasswordTextField(
 
         var passwordVisibility by remember { mutableStateOf(false) }
 
-        if (inputControl.hasFocus) {
+        val hasFocus by inputControl.hasFocus.collectAsState()
+        val error by inputControl.error.collectAsState()
+        val text by inputControl.text.collectAsState()
+
+        if (hasFocus) {
             SideEffect {
                 focusRequester.requestFocus()
             }
@@ -52,14 +56,16 @@ fun PasswordTextField(
         }
 
         OutlinedTextField(
-            value = inputControl.text,
-            keyboardOptions = inputControl.keyboardOptions,
+            value = text,
+            keyboardOptions = inputControl.keyboardOptions.asCompose(),
             singleLine = inputControl.singleLine,
-            label = { Text(text = label) },
-            isError = inputControl.error != null,
+            label = {
+                Text(text = label)
+            },
+            isError = error != null,
             onValueChange = inputControl::onTextChanged,
             visualTransformation = if (passwordVisibility) {
-                inputControl.visualTransformation
+                inputControl.visualTransformation.asCompose()
             } else {
                 PasswordVisualTransformation()
             },
@@ -82,6 +88,6 @@ fun PasswordTextField(
                 }
         )
 
-        ErrorText(inputControl.error?.resolve() ?: "")
+        ErrorText(inputControl.error.value ?: "")
     }
 }
