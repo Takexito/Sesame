@@ -3,7 +3,6 @@ package me.aartikov.sesame.compose.form.validation.control
 import me.aartikov.sesame.compose.form.control.CheckControl
 import me.aartikov.sesame.compose.form.validation.form.FormValidatorBuilder
 import me.aartikov.sesame.compose.form.validation.form.checked
-import me.aartikov.sesame.localizedstring.LocalizedString
 
 /**
  * Validator for [CheckControl].
@@ -15,7 +14,7 @@ import me.aartikov.sesame.localizedstring.LocalizedString
 class CheckValidator constructor(
     override val control: CheckControl,
     private val validation: (Boolean) -> ValidationResult,
-    private val showError: ((LocalizedString) -> Unit)? = null
+    private val showError: ((String) -> Unit)? = null
 ) : ControlValidator<CheckControl> {
 
     override fun validate(displayResult: Boolean): ValidationResult {

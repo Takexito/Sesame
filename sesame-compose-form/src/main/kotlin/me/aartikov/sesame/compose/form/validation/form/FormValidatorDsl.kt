@@ -1,6 +1,5 @@
 package me.aartikov.sesame.compose.form.validation.form
 
-import androidx.annotation.StringRes
 import kotlinx.coroutines.CoroutineScope
 import me.aartikov.sesame.compose.form.control.CheckControl
 import me.aartikov.sesame.compose.form.control.InputControl
@@ -9,7 +8,6 @@ import me.aartikov.sesame.compose.form.validation.control.CheckValidator
 import me.aartikov.sesame.compose.form.validation.control.ControlValidator
 import me.aartikov.sesame.compose.form.validation.control.InputValidatorBuilder
 import me.aartikov.sesame.compose.form.validation.control.ValidationResult
-import me.aartikov.sesame.localizedstring.LocalizedString
 
 class FormValidatorBuilder {
 
@@ -39,7 +37,7 @@ class FormValidatorBuilder {
     fun check(
         checkControl: CheckControl,
         validation: (Boolean) -> ValidationResult,
-        showError: ((LocalizedString) -> Unit)? = null
+        showError: ((String) -> Unit)? = null
     ) {
         val checkValidator = CheckValidator(checkControl, validation, showError)
         validator(checkValidator)
@@ -83,8 +81,8 @@ fun CoroutineScope.formValidator(buildBlock: FormValidatorBuilder.() -> Unit): F
  */
 fun FormValidatorBuilder.checked(
     checkControl: CheckControl,
-    errorMessage: LocalizedString,
-    showError: ((LocalizedString) -> Unit)? = null
+    errorMessage: String,
+    showError: ((String) -> Unit)? = null
 ) {
     this.check(
         checkControl,
@@ -93,15 +91,4 @@ fun FormValidatorBuilder.checked(
         },
         showError
     )
-}
-
-/**
- * Adds a validator that checks that [checkControl] is checked.
- */
-fun FormValidatorBuilder.checked(
-    checkControl: CheckControl,
-    @StringRes errorMessageRes: Int,
-    showError: ((LocalizedString) -> Unit)? = null
-) {
-    checked(checkControl, LocalizedString.resource(errorMessageRes), showError)
 }

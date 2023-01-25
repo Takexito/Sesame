@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import me.aartikov.sesame.compose.form.options.KeyboardOptions
-import me.aartikov.sesame.localizedstring.LocalizedString
 
 /**
  * Logical representation of an input field. It allows to configure an input field and manage its state from ViewModel.
@@ -48,7 +47,7 @@ class InputControl(
     /**
      * Displayed error.
      */
-    override val error: MutableStateFlow<LocalizedString?> = MutableStateFlow(null)
+    override val error: MutableStateFlow<String?> = MutableStateFlow(null)
 
     override val value = _text
 

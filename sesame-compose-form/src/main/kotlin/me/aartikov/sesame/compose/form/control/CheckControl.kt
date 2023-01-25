@@ -4,7 +4,6 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import me.aartikov.sesame.localizedstring.LocalizedString
 
 /**
  * Logical representation of a control with checkable state (CheckBox, Switch, etc). It allows to manage checked state from ViewModel.
@@ -31,7 +30,7 @@ class CheckControl(
     /**
      * Displayed error.
      */
-    override val error: MutableStateFlow<LocalizedString?> = MutableStateFlow(null)
+    override val error: MutableStateFlow<String?> = MutableStateFlow(null)
 
     override val value = checked
 

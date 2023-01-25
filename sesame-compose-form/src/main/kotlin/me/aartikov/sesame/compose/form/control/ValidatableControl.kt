@@ -2,7 +2,6 @@ package me.aartikov.sesame.compose.form.control
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import me.aartikov.sesame.localizedstring.LocalizedString
 
 /**
  * Control that can be validated.
@@ -21,7 +20,7 @@ interface ValidatableControl<ValueT> {
     /**
      * Displayed error.
      */
-    val error: MutableStateFlow<LocalizedString?>
+    val error: MutableStateFlow<String?>
 
     /**
      * Is control should be skipped during validation.
