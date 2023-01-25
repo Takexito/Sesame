@@ -1,14 +1,10 @@
 package me.aartikov.sesame.compose.form.control
 
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.text.input.VisualTransformation
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import me.aartikov.sesame.compose.form.options.KeyboardOptions
 import me.aartikov.sesame.localizedstring.LocalizedString
 
 /**
@@ -23,40 +19,41 @@ class InputControl(
     val visualTransformation: VisualTransformation = VisualTransformation.None
 ) : ValidatableControl<String> {
 
-    private var _text by mutableStateOf(correctText(initialText))
+    private val _text = MutableStateFlow(correctText(initialText))
 
     /**
      * Current text.
      */
     var text: String
-        get() = _text
+        get() = _text.value
         set(value) {
-            _text = correctText(value)
+            _text.value = correctText(value)
         }
 
     /**
      * Is control visible.
      */
-    var visible: Boolean by mutableStateOf(true)
+    val visible: MutableStateFlow<Boolean> = MutableStateFlow(true)
 
     /**
      * Is control enabled.
      */
-    var enabled: Boolean by mutableStateOf(true)
+    val enabled: MutableStateFlow<Boolean> = MutableStateFlow(true)
 
     /**
      * Is control has focus.
      */
-    var hasFocus: Boolean by mutableStateOf(false)
+    val hasFocus: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
     /**
      * Displayed error.
      */
-    override var error: LocalizedString? by mutableStateOf(null)
+    override val error: MutableStateFlow<LocalizedString?> = MutableStateFlow(null)
 
-    override val value by ::text
+    override val value = _text
 
-    override val skipInValidation by derivedStateOf { !visible || !enabled }
+    override val skipInValidation =
+        computed(visible, enabled) { visible, enabled -> !visible || !enabled }
 
     private val mutableScrollToItEventFlow = MutableSharedFlow<Unit>(
         extraBufferCapacity = 1,
@@ -66,7 +63,7 @@ class InputControl(
     val scrollToItEvent get() = mutableScrollToItEventFlow.asSharedFlow()
 
     override fun requestFocus() {
-        this.hasFocus = true
+        this.hasFocus.value = true
         mutableScrollToItEventFlow.tryEmit(Unit)
     }
 
@@ -78,7 +75,7 @@ class InputControl(
     }
 
     fun onFocusChanged(hasFocus: Boolean) {
-        this.hasFocus = hasFocus
+        this.hasFocus.value = hasFocus
     }
 
     private fun correctText(text: String): String {

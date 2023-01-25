@@ -118,7 +118,7 @@ fun InputValidatorBuilder.minLength(length: Int, @StringRes errorMessageRes: Int
  */
 fun InputValidatorBuilder.equalsTo(inputControl: InputControl, errorMessage: LocalizedString) {
     validation(
-        isValid = { it == inputControl.value },
+        isValid = { it == inputControl.value.value },
         errorMessage
     )
 }

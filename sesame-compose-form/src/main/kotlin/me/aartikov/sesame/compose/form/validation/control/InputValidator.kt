@@ -23,16 +23,16 @@ class InputValidator constructor(
     }
 
     private fun getValidationResult(): ValidationResult {
-        if (control.skipInValidation) {
+        if (control.skipInValidation.value) {
             return ValidationResult.Skipped
         }
 
-        if (control.value.isBlank() && !required) {
+        if (control.value.value.isBlank() && !required) {
             return ValidationResult.Valid
         }
 
         validations.forEach { validation ->
-            val result = validation(control.value)
+            val result = validation(control.value.value)
             if (result is ValidationResult.Invalid) {
                 return result
             }
@@ -43,7 +43,7 @@ class InputValidator constructor(
 
     private fun displayValidationResult(validationResult: ValidationResult) =
         when (validationResult) {
-            ValidationResult.Valid, ValidationResult.Skipped -> control.error = null
-            is ValidationResult.Invalid -> control.error = validationResult.errorMessage
+            ValidationResult.Valid, ValidationResult.Skipped -> control.error.value = null
+            is ValidationResult.Invalid -> control.error.value = validationResult.errorMessage
         }
 }

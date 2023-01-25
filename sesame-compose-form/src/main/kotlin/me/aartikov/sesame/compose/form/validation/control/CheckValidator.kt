@@ -25,18 +25,18 @@ class CheckValidator constructor(
     }
 
     private fun getValidationResult(): ValidationResult {
-        if (control.skipInValidation) {
+        if (control.skipInValidation.value) {
             return ValidationResult.Skipped
         }
 
-        return validation(control.value)
+        return validation(control.value.value)
     }
 
     private fun displayValidationResult(validationResult: ValidationResult) =
         when (validationResult) {
-            ValidationResult.Valid, ValidationResult.Skipped -> control.error = null
+            ValidationResult.Valid, ValidationResult.Skipped -> control.error.value = null
             is ValidationResult.Invalid -> {
-                control.error = validationResult.errorMessage
+                control.error.value = validationResult.errorMessage
                 showError?.invoke(validationResult.errorMessage)
             }
         }
