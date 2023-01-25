@@ -5,7 +5,7 @@ package me.aartikov.sesame.compose.form.options
  * has upper-case and lower-case letters.
  */
 @JvmInline
-value class KeyboardCapitalization internal constructor(internal val value: Int) {
+value class KeyboardCapitalization internal constructor(private val value: Int) {
 
     override fun toString(): String {
         return when (this) {

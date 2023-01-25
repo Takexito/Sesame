@@ -18,16 +18,10 @@ class InputControl(
     val visualTransformation: VisualTransformation = VisualTransformation.None
 ) : ValidatableControl<String> {
 
-    private val _text = MutableStateFlow(correctText(initialText))
-
     /**
      * Current text.
      */
-    var text: String
-        get() = _text.value
-        set(value) {
-            _text.value = correctText(value)
-        }
+    val text = MutableStateFlow(correctText(initialText))
 
     /**
      * Is control visible.
@@ -49,7 +43,7 @@ class InputControl(
      */
     override val error: MutableStateFlow<String?> = MutableStateFlow(null)
 
-    override val value = _text
+    override val value = text
 
     override val skipInValidation =
         computed(visible, enabled) { visible, enabled -> !visible || !enabled }
@@ -70,7 +64,7 @@ class InputControl(
      * Should be called when text is changed on a view side.
      */
     fun onTextChanged(text: String) {
-        this.text = text
+        this.text.value = text
     }
 
     fun onFocusChanged(hasFocus: Boolean) {
