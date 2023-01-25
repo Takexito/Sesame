@@ -8,8 +8,24 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.dropWhile
 import kotlinx.coroutines.launch
 
-
 private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
+fun <T, R> computed(
+    flow: StateFlow<T>,
+    transform: (T) -> R
+): StateFlow<R> {
+    val initialValue = flow.value
+    val resultFlow = MutableStateFlow(transform(initialValue))
+    scope.launch {
+        flow.dropWhile {
+            it == initialValue
+        }
+            .collect {
+                resultFlow.value = transform(it)
+            }
+    }
+    return resultFlow
+}
 
 fun <T1, T2, R> computed(
     flow1: StateFlow<T1>,
