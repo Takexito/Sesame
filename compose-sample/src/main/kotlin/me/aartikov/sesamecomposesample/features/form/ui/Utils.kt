@@ -38,7 +38,6 @@ fun OffsetMapping.asCompose(): ComposeOffsetMapping {
 }
 
 fun KeyboardOptions.asCompose(): ComposeKeyboardOptions {
-    KeyboardCapitalization
     return ComposeKeyboardOptions(
         capitalization = capitalization.asCompose(),
         autoCorrect = autoCorrect,
@@ -81,7 +80,6 @@ fun ImeAction.asCompose(): ComposeImeAction {
         ImeAction.Next -> ComposeImeAction.Next
         ImeAction.Send -> ComposeImeAction.Send
         ImeAction.Previous -> ComposeImeAction.Previous
-
         else -> throw NotImplementedError("Can't find compose equivalent of ImeAction - $this")
     }
 }

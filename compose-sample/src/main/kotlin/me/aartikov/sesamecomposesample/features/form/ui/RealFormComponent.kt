@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import me.aartikov.sesame.compose.form.control.CheckControl
 import me.aartikov.sesame.compose.form.control.InputControl
 import me.aartikov.sesame.compose.form.control.computed
+import me.aartikov.sesame.compose.form.options.ImeAction
 import me.aartikov.sesame.compose.form.options.KeyboardCapitalization
 import me.aartikov.sesame.compose.form.options.KeyboardOptions
 import me.aartikov.sesame.compose.form.options.KeyboardType
@@ -40,20 +41,23 @@ class RealFormComponent(
             it.replace(Regex("[1234567890+=]"), "")
         },
         keyboardOptions = KeyboardOptions(
-            capitalization = KeyboardCapitalization.Words
+            capitalization = KeyboardCapitalization.Words,
+            imeAction = ImeAction.Next
         )
     )
 
     override val emailInput = InputControl(
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Email
+            keyboardType = KeyboardType.Email,
+            imeAction = ImeAction.Next
         )
     )
 
     override val phoneInput = InputControl(
         maxLength = PHONE_MAX_LENGTH,
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Phone
+            keyboardType = KeyboardType.Phone,
+            imeAction = ImeAction.Next
         ),
         textTransformation = { it.replace(Regex("[^1234567890(-)+]"), "")},
         visualTransformation = RussianPhoneNumberVisualTransformation
@@ -61,13 +65,15 @@ class RealFormComponent(
 
     override val passwordInput = InputControl(
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Password
+            keyboardType = KeyboardType.Password,
+            imeAction = ImeAction.Next
         )
     )
 
     override val confirmPasswordInput = InputControl(
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Password
+            keyboardType = KeyboardType.Password,
+            imeAction = ImeAction.Done
         )
     )
 
