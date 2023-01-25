@@ -19,7 +19,6 @@ fun CoroutineScope.dynamicValidationResult(formValidator: FormValidator): StateF
     return result
 }
 
-//TODO: Check
 private fun callWhenControlEdited(
     coroutineScope: CoroutineScope,
     control: ValidatableControl<*>,

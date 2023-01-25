@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import me.aartikov.sesame.compose.form.control.ValidatableControl
+import me.aartikov.sesame.compose.form.control.computed
 import me.aartikov.sesame.compose.form.validation.control.ControlValidator
 import me.aartikov.sesame.compose.form.validation.control.InputValidator
 import me.aartikov.sesame.compose.form.validation.control.ValidationResult
@@ -63,7 +64,7 @@ object RevalidateOnValueChanged : FormValidationFeature {
         validator: ControlValidator<*>
     ) {
         val control = validator.control
-        control.value
+        computed(control.value) { it }
             .drop(1)
             .onEach {
                 if (control.error.value != null) {
@@ -89,7 +90,7 @@ object HideErrorOnValueChanged : FormValidationFeature {
         coroutineScope: CoroutineScope,
         control: ValidatableControl<*>
     ) {
-        control.value
+        computed(control.value) { it }
             .drop(1)
             .onEach {
                 control.error.value = null
