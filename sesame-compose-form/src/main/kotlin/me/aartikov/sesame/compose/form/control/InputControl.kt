@@ -3,6 +3,7 @@ package me.aartikov.sesame.compose.form.control
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import me.aartikov.sesame.compose.form.options.KeyboardOptions
 
@@ -18,10 +19,13 @@ class InputControl(
     val visualTransformation: VisualTransformation = VisualTransformation.None
 ) : ValidatableControl<String> {
 
+    private val _text = MutableStateFlow(correctText(initialText))
+
     /**
      * Current text.
      */
-    val text = MutableStateFlow(correctText(initialText))
+    val text: StateFlow<String>
+        get() = _text
 
     /**
      * Is control visible.
@@ -43,7 +47,7 @@ class InputControl(
      */
     override val error: MutableStateFlow<String?> = MutableStateFlow(null)
 
-    override val value = text
+    override val value: StateFlow<String> = _text
 
     override val skipInValidation =
         computed(visible, enabled) { visible, enabled -> !visible || !enabled }
@@ -64,7 +68,7 @@ class InputControl(
      * Should be called when text is changed on a view side.
      */
     fun onTextChanged(text: String) {
-        this.text.value = text
+        this._text.value = correctText(text)
     }
 
     fun onFocusChanged(hasFocus: Boolean) {

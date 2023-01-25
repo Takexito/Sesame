@@ -55,6 +55,7 @@ class RealFormComponent(
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Phone
         ),
+        textTransformation = { it.replace(Regex("[^1234567890(-)+]"), "")},
         visualTransformation = RussianPhoneNumberVisualTransformation
     )
 
@@ -96,7 +97,9 @@ class RealFormComponent(
         input(phoneInput) {
             isNotBlank("R.string.field_is_blank_error_message")
             validation(
-                { str -> str.count { it.isDigit() } == RUS_PHONE_DIGIT_COUNT },
+                { str ->
+                    str.count { it.isDigit() } == RUS_PHONE_DIGIT_COUNT
+                },
                 "R.string.invalid_phone_error_message"
             )
         }

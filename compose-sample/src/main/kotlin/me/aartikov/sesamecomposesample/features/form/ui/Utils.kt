@@ -1,25 +1,39 @@
 package me.aartikov.sesamecomposesample.features.form.ui
 
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.input.ImeAction as ComposeImeAction
-import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
+import me.aartikov.sesame.compose.form.control.OffsetMapping
 import me.aartikov.sesame.compose.form.control.VisualTransformation
 import me.aartikov.sesame.compose.form.options.ImeAction
 import me.aartikov.sesame.compose.form.options.KeyboardCapitalization
 import me.aartikov.sesame.compose.form.options.KeyboardOptions
 import me.aartikov.sesame.compose.form.options.KeyboardType
 import androidx.compose.foundation.text.KeyboardOptions as ComposeKeyboardOptions
+import androidx.compose.ui.text.input.ImeAction as ComposeImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization as ComposeKeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType as ComposeKeyBoardType
+import androidx.compose.ui.text.input.OffsetMapping as ComposeOffsetMapping
 import androidx.compose.ui.text.input.VisualTransformation as ComposeVisualTransformation
 
 fun VisualTransformation.asCompose(): ComposeVisualTransformation {
     return ComposeVisualTransformation {
+        val transformedText = filter(it.text)
         TransformedText(
-            AnnotatedString(this.filter(it.text)),
-            OffsetMapping.Identity
+            AnnotatedString(transformedText.text),
+            transformedText.offsetMapping.asCompose()
         )
+    }
+}
+
+fun OffsetMapping.asCompose(): ComposeOffsetMapping {
+    return object : ComposeOffsetMapping {
+        override fun originalToTransformed(offset: Int): Int {
+            return this@asCompose.originalToTransformed(offset)
+        }
+
+        override fun transformedToOriginal(offset: Int): Int {
+            return this@asCompose.transformedToOriginal(offset)
+        }
     }
 }
 

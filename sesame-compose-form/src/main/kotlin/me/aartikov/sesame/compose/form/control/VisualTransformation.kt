@@ -1,6 +1,5 @@
 package me.aartikov.sesame.compose.form.control
 
-
 fun interface VisualTransformation {
     /**
      * Change the visual output of given text.
@@ -12,13 +11,15 @@ fun interface VisualTransformation {
      * @param text The original text
      * @return filtered text.
      */
-    fun filter(text: String): String
+    fun filter(text: String): TransformedText
 
     companion object {
         /**
          * A special visual transformation object indicating that no transformation is applied.
          */
-        val None: VisualTransformation = VisualTransformation { text -> text }
+        val None: VisualTransformation = VisualTransformation { text ->
+            TransformedText(text, OffsetMapping.Identity)
+        }
     }
 }
 
@@ -31,8 +32,8 @@ fun interface VisualTransformation {
  */
 class PasswordVisualTransformation(val mask: Char = '\u2022') :
     VisualTransformation {
-    override fun filter(text: String): String {
-        return mask.toString().repeat(text.length)
+    override fun filter(text: String): TransformedText {
+        return TransformedText(mask.toString().repeat(text.length), OffsetMapping.Identity)
     }
 
     override fun equals(other: Any?): Boolean {
