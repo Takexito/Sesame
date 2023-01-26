@@ -28,7 +28,7 @@ class RealFormComponent(
 
     companion object {
         private const val NAME_MAX_LENGTH = 30
-        private const val PHONE_MAX_LENGTH = 11
+        private const val PHONE_MAX_LENGTH = 10
         private const val PASSWORD_MIN_LENGTH = 6
         private const val RUS_PHONE_DIGIT_COUNT = 10
     }
