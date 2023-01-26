@@ -15,6 +15,8 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
@@ -110,29 +112,36 @@ fun FormUiPreview() {
 }
 
 
+@OptIn(DelicateCoroutinesApi::class)
 class FakeFormComponent : FormComponent {
+    private val fakeScope = GlobalScope
 
     override val nameInput = InputControl(
+        fakeScope,
         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words)
     )
 
     override val emailInput = InputControl(
+        fakeScope,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
     )
 
     override val phoneInput = InputControl(
+        fakeScope,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
     )
 
     override val passwordInput = InputControl(
+        fakeScope,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
     )
 
     override val confirmPasswordInput = InputControl(
+        fakeScope,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
     )
 
-    override val termsCheckBox = CheckControl()
+    override val termsCheckBox = CheckControl(fakeScope)
 
     override val submitButtonState = MutableStateFlow(SubmitButtonState.Valid)
 

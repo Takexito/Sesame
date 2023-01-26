@@ -1,16 +1,19 @@
 package me.aartikov.sesame.compose.form.control
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import me.aartikov.sesame.compose.form.options.KeyboardOptions
+import me.aartikov.sesame.compose.form.util.computed
 
 /**
  * Logical representation of an input field. It allows to configure an input field and manage its state from ViewModel.
  */
 class InputControl(
+    coroutineScope: CoroutineScope,
     initialText: String = "",
     val singleLine: Boolean = true,
     val maxLength: Int = Int.MAX_VALUE,
@@ -50,7 +53,7 @@ class InputControl(
     override val value: StateFlow<String> = _text
 
     override val skipInValidation =
-        computed(visible, enabled) { visible, enabled -> !visible || !enabled }
+        computed(coroutineScope, visible, enabled) { visible, enabled -> !visible || !enabled }
 
     private val mutableScrollToItEventFlow = MutableSharedFlow<Unit>(
         extraBufferCapacity = 1,
@@ -64,11 +67,15 @@ class InputControl(
         mutableScrollToItEventFlow.tryEmit(Unit)
     }
 
+    fun setText(text: String) {
+        _text.value = correctText(text)
+    }
+
     /**
      * Should be called when text is changed on a view side.
      */
     fun onTextChanged(text: String) {
-        this._text.value = correctText(text)
+        _text.value = correctText(text)
     }
 
     fun onFocusChanged(hasFocus: Boolean) {

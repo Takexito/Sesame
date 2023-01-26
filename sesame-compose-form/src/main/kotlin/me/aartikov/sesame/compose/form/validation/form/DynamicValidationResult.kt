@@ -3,7 +3,7 @@ package me.aartikov.sesame.compose.form.validation.form
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 import me.aartikov.sesame.compose.form.control.ValidatableControl
-import me.aartikov.sesame.compose.form.control.computed
+import me.aartikov.sesame.compose.form.util.computed
 
 /**
  * Validates a form dynamically and emits validation result. Validation called whenever a value or skipInValidation
@@ -24,7 +24,7 @@ private fun callWhenControlEdited(
     control: ValidatableControl<*>,
     callback: () -> Unit
 ) {
-    computed(control.value, control.skipInValidation) { v1, v2 -> v1 to v2 }
+    computed(coroutineScope, control.value, control.skipInValidation) { v1, v2 -> v1 to v2 }
         .drop(1)
         .onEach { callback() }
         .launchIn(coroutineScope)

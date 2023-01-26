@@ -5,13 +5,11 @@ import androidx.annotation.ColorRes
 import com.arkivanov.decompose.ComponentContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
-import me.aartikov.sesame.compose.form.control.CheckControl
-import me.aartikov.sesame.compose.form.control.InputControl
-import me.aartikov.sesame.compose.form.control.computed
 import me.aartikov.sesame.compose.form.options.ImeAction
 import me.aartikov.sesame.compose.form.options.KeyboardCapitalization
 import me.aartikov.sesame.compose.form.options.KeyboardOptions
 import me.aartikov.sesame.compose.form.options.KeyboardType
+import me.aartikov.sesame.compose.form.util.computed
 import me.aartikov.sesame.compose.form.validation.control.*
 import me.aartikov.sesame.compose.form.validation.form.*
 import me.aartikov.sesamecomposesample.R
@@ -59,7 +57,7 @@ class RealFormComponent(
             keyboardType = KeyboardType.Phone,
             imeAction = ImeAction.Next
         ),
-        textTransformation = { it.replace(Regex("[^1234567890(-)+]"), "")},
+        textTransformation = { it.replace(Regex("[^1234567890(-)+]"), "") },
         visualTransformation = RussianPhoneNumberVisualTransformation
     )
 
@@ -132,7 +130,7 @@ class RealFormComponent(
 
     private val dynamicResult = coroutineScope.dynamicValidationResult(formValidator)
 
-    override val submitButtonState = computed(dynamicResult) { result ->
+    override val submitButtonState = computed(coroutineScope, dynamicResult) { result ->
         if (result.isValid) SubmitButtonState.Valid else SubmitButtonState.Invalid
     }
 

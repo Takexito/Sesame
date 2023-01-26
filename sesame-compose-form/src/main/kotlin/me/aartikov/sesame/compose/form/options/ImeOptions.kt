@@ -1,6 +1,5 @@
 package me.aartikov.sesame.compose.form.options
 
-
 /**
  *
  * @param singleLine informs the IME that the text field is single line and IME
@@ -20,60 +19,10 @@ package me.aartikov.sesame.compose.form.options
  * on the keyboard. For example, search icon may be shown if [ImeAction.Search] is specified.
  * When [singleLine] is false, the IME might show return key rather than the action requested here.
  */
-class ImeOptions(
+data class ImeOptions(
     val singleLine: Boolean = false,
     val capitalization: KeyboardCapitalization = KeyboardCapitalization.None,
     val autoCorrect: Boolean = true,
     val keyboardType: KeyboardType = KeyboardType.Text,
     val imeAction: ImeAction = ImeAction.Default
-) {
-    companion object {
-        /**
-         * Default [ImeOptions]. Please see parameter descriptions for default values.
-         */
-        val Default = ImeOptions()
-    }
-
-    fun copy(
-        singleLine: Boolean = this.singleLine,
-        capitalization: KeyboardCapitalization = this.capitalization,
-        autoCorrect: Boolean = this.autoCorrect,
-        keyboardType: KeyboardType = this.keyboardType,
-        imeAction: ImeAction = this.imeAction
-    ): ImeOptions {
-        return ImeOptions(
-            singleLine = singleLine,
-            capitalization = capitalization,
-            autoCorrect = autoCorrect,
-            keyboardType = keyboardType,
-            imeAction = imeAction
-        )
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is ImeOptions) return false
-
-        if (singleLine != other.singleLine) return false
-        if (capitalization != other.capitalization) return false
-        if (autoCorrect != other.autoCorrect) return false
-        if (keyboardType != other.keyboardType) return false
-        if (imeAction != other.imeAction) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = singleLine.hashCode()
-        result = 31 * result + capitalization.hashCode()
-        result = 31 * result + autoCorrect.hashCode()
-        result = 31 * result + keyboardType.hashCode()
-        result = 31 * result + imeAction.hashCode()
-        return result
-    }
-
-    override fun toString(): String {
-        return "ImeOptions(singleLine=$singleLine, capitalization=$capitalization, " +
-                "autoCorrect=$autoCorrect, keyboardType=$keyboardType, imeAction=$imeAction)"
-    }
-}
+)
