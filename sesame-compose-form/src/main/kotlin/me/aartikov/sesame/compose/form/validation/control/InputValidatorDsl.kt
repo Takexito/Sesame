@@ -1,5 +1,8 @@
 package me.aartikov.sesame.compose.form.validation.control
 
+import dev.icerock.moko.resources.StringResource
+import dev.icerock.moko.resources.desc.Resource
+import dev.icerock.moko.resources.desc.StringDesc
 import me.aartikov.sesame.compose.form.control.InputControl
 
 class InputValidatorBuilder(
@@ -24,7 +27,7 @@ class InputValidatorBuilder(
 /**
  * Adds an arbitrary validation. Validations are processed sequentially until first error.
  */
-fun InputValidatorBuilder.validation(isValid: (String) -> Boolean, errorMessage: String) {
+fun InputValidatorBuilder.validation(isValid: (String) -> Boolean, errorMessage: StringDesc) {
     validation {
         if (isValid(it)) {
             ValidationResult.Valid
@@ -39,7 +42,17 @@ fun InputValidatorBuilder.validation(isValid: (String) -> Boolean, errorMessage:
  */
 fun InputValidatorBuilder.validation(
     isValid: (String) -> Boolean,
-    errorMessage: () -> String
+    errorMessageRes: StringResource
+) {
+    validation(isValid, StringDesc.Resource(errorMessageRes))
+}
+
+/**
+ * Adds an arbitrary validation. Validations are processed sequentially until first error.
+ */
+fun InputValidatorBuilder.validation(
+    isValid: (String) -> Boolean,
+    errorMessage: () -> StringDesc
 ) {
     validation {
         if (isValid(it)) {
@@ -53,7 +66,7 @@ fun InputValidatorBuilder.validation(
 /**
  * Adds a validation that checks that an input is not blank.
  */
-fun InputValidatorBuilder.isNotBlank(errorMessage: String) {
+fun InputValidatorBuilder.isNotBlank(errorMessage: StringDesc) {
     validation(
         isValid = { it.isNotBlank() },
         errorMessage
@@ -61,9 +74,16 @@ fun InputValidatorBuilder.isNotBlank(errorMessage: String) {
 }
 
 /**
+ * Adds a validation that checks that an input is not blank.
+ */
+fun InputValidatorBuilder.isNotBlank(errorMessageRes: StringResource) {
+    isNotBlank(StringDesc.Resource(errorMessageRes))
+}
+
+/**
  * Adds a validation that checks that an input matches [regex].
  */
-fun InputValidatorBuilder.regex(regex: Regex, errorMessage: String) {
+fun InputValidatorBuilder.regex(regex: Regex, errorMessage: StringDesc) {
     validation(
         isValid = { regex.matches(it) },
         errorMessage
@@ -71,9 +91,16 @@ fun InputValidatorBuilder.regex(regex: Regex, errorMessage: String) {
 }
 
 /**
+ * Adds a validation that checks that an input matches [regex].
+ */
+fun InputValidatorBuilder.regex(regex: Regex, errorMessageRes: StringResource) {
+    regex(regex, StringDesc.Resource(errorMessageRes))
+}
+
+/**
  * Adds a validation that checks that an input has at least given number of symbols.
  */
-fun InputValidatorBuilder.minLength(length: Int, errorMessage: String) {
+fun InputValidatorBuilder.minLength(length: Int, errorMessage: StringDesc) {
     validation(
         isValid = { it.length >= length },
         errorMessage
@@ -81,11 +108,25 @@ fun InputValidatorBuilder.minLength(length: Int, errorMessage: String) {
 }
 
 /**
+ * Adds a validation that checks that an input has at least given number of symbols.
+ */
+fun InputValidatorBuilder.minLength(length: Int, errorMessageRes: StringResource) {
+    minLength(length, StringDesc.Resource(errorMessageRes))
+}
+
+/**
  * Adds a validation that checks that an input equals to an input of another input control.
  */
-fun InputValidatorBuilder.equalsTo(inputControl: InputControl, errorMessage: String) {
+fun InputValidatorBuilder.equalsTo(inputControl: InputControl, errorMessage: StringDesc) {
     validation(
         isValid = { it == inputControl.value.value },
         errorMessage
     )
+}
+
+/**
+ * Adds a validation that checks that an input equals to an input of another input control.
+ */
+fun InputValidatorBuilder.equalsTo(inputControl: InputControl, errorMessageRes: StringResource) {
+    equalsTo(inputControl, StringDesc.Resource(errorMessageRes))
 }

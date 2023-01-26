@@ -1,17 +1,26 @@
 apply from: "dependencies.gradle"
 apply from: "androidLibraryConfig.gradle"
 
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+}
+
 buildscript {
     ext.kotlin_version = "1.6.10"
     repositories {
         mavenCentral()
         google()
+        gradlePluginPortal()
     }
     dependencies {
         classpath "com.android.tools.build:gradle:7.0.4"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:2.41"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:1.6.10"
+        classpath "dev.icerock.moko:resources-generator:0.20.1"
+
     }
 }
 

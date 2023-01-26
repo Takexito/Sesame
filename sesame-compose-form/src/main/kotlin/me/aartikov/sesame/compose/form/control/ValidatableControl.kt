@@ -1,5 +1,6 @@
 package me.aartikov.sesame.compose.form.control
 
+import dev.icerock.moko.resources.desc.StringDesc
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -20,7 +21,7 @@ interface ValidatableControl<ValueT> {
     /**
      * Displayed error.
      */
-    val error: MutableStateFlow<String?>
+    val error: MutableStateFlow<StringDesc?>
 
     /**
      * Is control should be skipped during validation.

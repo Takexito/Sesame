@@ -1,5 +1,7 @@
 package me.aartikov.sesame.compose.form.validation.control
 
+import dev.icerock.moko.resources.desc.StringDesc
+
 /**
  * Represents a result of validation.
  */
@@ -18,5 +20,5 @@ sealed class ValidationResult {
     /**
      * An input is invalid.
      */
-    data class Invalid(val errorMessage: String) : ValidationResult()
+    data class Invalid(val errorMessage: StringDesc) : ValidationResult()
 }

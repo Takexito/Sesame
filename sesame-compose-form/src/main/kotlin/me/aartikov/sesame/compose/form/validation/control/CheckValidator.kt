@@ -1,5 +1,6 @@
 package me.aartikov.sesame.compose.form.validation.control
 
+import dev.icerock.moko.resources.desc.StringDesc
 import me.aartikov.sesame.compose.form.control.CheckControl
 import me.aartikov.sesame.compose.form.validation.form.FormValidatorBuilder
 import me.aartikov.sesame.compose.form.validation.form.checked
@@ -14,7 +15,7 @@ import me.aartikov.sesame.compose.form.validation.form.checked
 class CheckValidator constructor(
     override val control: CheckControl,
     private val validation: (Boolean) -> ValidationResult,
-    private val showError: ((String) -> Unit)? = null
+    private val showError: ((StringDesc) -> Unit)? = null
 ) : ControlValidator<CheckControl> {
 
     override fun validate(displayResult: Boolean): ValidationResult {

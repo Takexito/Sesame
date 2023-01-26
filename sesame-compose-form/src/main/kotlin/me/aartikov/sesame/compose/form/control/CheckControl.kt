@@ -1,5 +1,6 @@
 package me.aartikov.sesame.compose.form.control
 
+import dev.icerock.moko.resources.desc.StringDesc
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -33,7 +34,7 @@ class CheckControl(
     /**
      * Displayed error.
      */
-    override val error: MutableStateFlow<String?> = MutableStateFlow(null)
+    override val error: MutableStateFlow<StringDesc?> = MutableStateFlow(null)
 
     override val value = checked
 

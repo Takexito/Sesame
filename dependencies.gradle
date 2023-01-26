@@ -30,7 +30,8 @@ ext {
             decompose           : "0.6.0",
             coil                : "1.4.0",
             koin                : "3.1.6",
-            accompanist         : "0.24.6-alpha"
+            accompanist         : "0.24.6-alpha",
+            mokoResources       : "0.20.1"
     ]
 
     desugaring = "com.android.tools:desugar_jdk_libs:${versions.desugaring}"
@@ -105,4 +106,5 @@ ext {
 
     koin = "io.insert-koin:koin-android:${versions.koin}"
 
+    mokoResources = "dev.icerock.moko:resources:${versions.mokoResources}"
 }

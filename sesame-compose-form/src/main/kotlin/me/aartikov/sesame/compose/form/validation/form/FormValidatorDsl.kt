@@ -1,5 +1,8 @@
 package me.aartikov.sesame.compose.form.validation.form
 
+import dev.icerock.moko.resources.StringResource
+import dev.icerock.moko.resources.desc.Resource
+import dev.icerock.moko.resources.desc.StringDesc
 import kotlinx.coroutines.CoroutineScope
 import me.aartikov.sesame.compose.form.control.CheckControl
 import me.aartikov.sesame.compose.form.control.InputControl
@@ -37,7 +40,7 @@ class FormValidatorBuilder {
     fun check(
         checkControl: CheckControl,
         validation: (Boolean) -> ValidationResult,
-        showError: ((String) -> Unit)? = null
+        showError: ((StringDesc) -> Unit)? = null
     ) {
         val checkValidator = CheckValidator(checkControl, validation, showError)
         validator(checkValidator)
@@ -81,8 +84,8 @@ fun CoroutineScope.formValidator(buildBlock: FormValidatorBuilder.() -> Unit): F
  */
 fun FormValidatorBuilder.checked(
     checkControl: CheckControl,
-    errorMessage: String,
-    showError: ((String) -> Unit)? = null
+    errorMessage: StringDesc,
+    showError: ((StringDesc) -> Unit)? = null
 ) {
     this.check(
         checkControl,
@@ -91,4 +94,15 @@ fun FormValidatorBuilder.checked(
         },
         showError
     )
+}
+
+/**
+ * Adds a validator that checks that [checkControl] is checked.
+ */
+fun FormValidatorBuilder.checked(
+    checkControl: CheckControl,
+    errorMessageRes: StringResource,
+    showError: ((StringDesc) -> Unit)? = null
+) {
+    checked(checkControl, StringDesc.Resource(errorMessageRes), showError)
 }
