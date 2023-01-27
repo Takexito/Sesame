@@ -1,6 +1,6 @@
 package me.aartikov.sesame.compose.form.validation.control
 
-import me.aartikov.sesame.localizedstring.LocalizedString
+import dev.icerock.moko.resources.desc.StringDesc
 
 /**
  * Represents a result of validation.
@@ -20,5 +20,5 @@ sealed class ValidationResult {
     /**
      * An input is invalid.
      */
-    data class Invalid(val errorMessage: LocalizedString) : ValidationResult()
+    data class Invalid(val errorMessage: StringDesc) : ValidationResult()
 }

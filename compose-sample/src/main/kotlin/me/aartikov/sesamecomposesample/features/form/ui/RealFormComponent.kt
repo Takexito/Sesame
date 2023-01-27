@@ -2,19 +2,18 @@ package me.aartikov.sesamecomposesample.features.form.ui
 
 import android.util.Patterns
 import androidx.annotation.ColorRes
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.input.KeyboardType
 import com.arkivanov.decompose.ComponentContext
+import dev.icerock.moko.resources.StringResource
+import dev.icerock.moko.resources.desc.ResourceFormatted
+import dev.icerock.moko.resources.desc.StringDesc
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
-import me.aartikov.sesame.compose.form.control.CheckControl
-import me.aartikov.sesame.compose.form.control.InputControl
+import me.aartikov.sesame.compose.form.options.ImeAction
+import me.aartikov.sesame.compose.form.options.KeyboardCapitalization
+import me.aartikov.sesame.compose.form.options.KeyboardOptions
+import me.aartikov.sesame.compose.form.options.KeyboardType
 import me.aartikov.sesame.compose.form.validation.control.*
 import me.aartikov.sesame.compose.form.validation.form.*
-import me.aartikov.sesame.localizedstring.LocalizedString
 import me.aartikov.sesamecomposesample.R
 import me.aartikov.sesamecomposesample.core.utils.componentCoroutineScope
 
@@ -29,7 +28,7 @@ class RealFormComponent(
 
     companion object {
         private const val NAME_MAX_LENGTH = 30
-        private const val PHONE_MAX_LENGTH = 11
+        private const val PHONE_MAX_LENGTH = 10
         private const val PASSWORD_MIN_LENGTH = 6
         private const val RUS_PHONE_DIGIT_COUNT = 10
     }
@@ -42,33 +41,39 @@ class RealFormComponent(
             it.replace(Regex("[1234567890+=]"), "")
         },
         keyboardOptions = KeyboardOptions(
-            capitalization = KeyboardCapitalization.Words
+            capitalization = KeyboardCapitalization.Words,
+            imeAction = ImeAction.Next
         )
     )
 
     override val emailInput = InputControl(
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Email
+            keyboardType = KeyboardType.Email,
+            imeAction = ImeAction.Next
         )
     )
 
     override val phoneInput = InputControl(
         maxLength = PHONE_MAX_LENGTH,
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Phone
+            keyboardType = KeyboardType.Phone,
+            imeAction = ImeAction.Next
         ),
+        textTransformation = { it.replace(Regex("[^1234567890(-)+]"), "") },
         visualTransformation = RussianPhoneNumberVisualTransformation
     )
 
     override val passwordInput = InputControl(
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Password
+            keyboardType = KeyboardType.Password,
+            imeAction = ImeAction.Next
         )
     )
 
     override val confirmPasswordInput = InputControl(
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Password
+            keyboardType = KeyboardType.Password,
+            imeAction = ImeAction.Done
         )
     )
 
@@ -87,46 +92,54 @@ class RealFormComponent(
         )
 
         input(nameInput) {
-            isNotBlank(R.string.field_is_blank_error_message)
+            isNotBlank(StringResource(R.string.field_is_blank_error_message))
         }
 
         input(emailInput, required = false) {
-            isNotBlank(R.string.field_is_blank_error_message)
-            regex(Patterns.EMAIL_ADDRESS.toRegex(), R.string.invalid_email_error_message)
+            isNotBlank(StringResource(R.string.field_is_blank_error_message))
+            regex(
+                Patterns.EMAIL_ADDRESS.toRegex(),
+                StringResource(R.string.invalid_email_error_message)
+            )
         }
 
         input(phoneInput) {
-            isNotBlank(R.string.field_is_blank_error_message)
+            isNotBlank(StringResource(R.string.field_is_blank_error_message))
             validation(
-                { str -> str.count { it.isDigit() } == RUS_PHONE_DIGIT_COUNT },
-                R.string.invalid_phone_error_message
+                { str ->
+                    str.count { it.isDigit() } == RUS_PHONE_DIGIT_COUNT
+                },
+                StringResource(R.string.invalid_phone_error_message)
             )
         }
 
         input(passwordInput) {
-            isNotBlank(R.string.field_is_blank_error_message)
+            isNotBlank(StringResource(R.string.field_is_blank_error_message))
             minLength(
                 PASSWORD_MIN_LENGTH,
-                LocalizedString.resource(R.string.min_length_error_message, PASSWORD_MIN_LENGTH)
+                StringDesc.ResourceFormatted(
+                    StringResource(R.string.min_length_error_message),
+                    PASSWORD_MIN_LENGTH
+                )
             )
             validation(
                 { str -> str.any { it.isDigit() } },
-                LocalizedString.resource(R.string.must_contain_digit_error_message)
+                StringResource(R.string.must_contain_digit_error_message)
             )
         }
 
         input(confirmPasswordInput) {
-            isNotBlank(R.string.field_is_blank_error_message)
-            equalsTo(passwordInput, R.string.passwords_do_not_match_error_message)
+            isNotBlank(StringResource(R.string.field_is_blank_error_message))
+            equalsTo(passwordInput, StringResource(R.string.passwords_do_not_match_error_message))
         }
 
-        checked(termsCheckBox, R.string.terms_are_accepted_error_message)
+        checked(termsCheckBox, StringResource(R.string.terms_are_accepted_error_message))
     }
 
-    private val dynamicResult by coroutineScope.dynamicValidationResult(formValidator)
+    private val dynamicResult = coroutineScope.dynamicValidationResult(formValidator)
 
-    override val submitButtonState by derivedStateOf {
-        if (dynamicResult.isValid) SubmitButtonState.Valid else SubmitButtonState.Invalid
+    override val submitButtonState = computed(coroutineScope, dynamicResult) { result ->
+        if (result.isValid) SubmitButtonState.Valid else SubmitButtonState.Invalid
     }
 
     override fun onSubmitClicked() {

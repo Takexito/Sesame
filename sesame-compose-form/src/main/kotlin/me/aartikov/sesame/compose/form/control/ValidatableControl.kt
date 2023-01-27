@@ -1,6 +1,8 @@
 package me.aartikov.sesame.compose.form.control
 
-import me.aartikov.sesame.localizedstring.LocalizedString
+import dev.icerock.moko.resources.desc.StringDesc
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 /**
  * Control that can be validated.
@@ -14,17 +16,17 @@ interface ValidatableControl<ValueT> {
     /**
      * Control value.
      */
-    val value: ValueT
+    val value: StateFlow<ValueT>
 
     /**
      * Displayed error.
      */
-    var error: LocalizedString?
+    val error: MutableStateFlow<StringDesc?>
 
     /**
      * Is control should be skipped during validation.
      */
-    val skipInValidation: Boolean
+    val skipInValidation: StateFlow<Boolean>
 
     /**
      * Moves focus to a control.

@@ -7,17 +7,15 @@ import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import dev.icerock.moko.resources.compose.localized
 import kotlinx.coroutines.flow.collectLatest
 import me.aartikov.sesame.compose.form.control.InputControl
-import me.aartikov.sesamecomposesample.core.utils.resolve
+import me.aartikov.sesamecomposesample.features.form.ui.asCompose
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -27,6 +25,9 @@ fun TextField(
     modifier: Modifier = Modifier
 ) {
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    val hasFocus by inputControl.hasFocus.collectAsState()
+    val error by inputControl.error.collectAsState()
+    val text by inputControl.text.collectAsState()
 
     Column(
         modifier = modifier
@@ -35,7 +36,7 @@ fun TextField(
     ) {
         val focusRequester = remember { FocusRequester() }
 
-        if (inputControl.hasFocus) {
+        if (hasFocus) {
             SideEffect {
                 focusRequester.requestFocus()
             }
@@ -48,13 +49,13 @@ fun TextField(
         }
 
         OutlinedTextField(
-            value = inputControl.text,
-            keyboardOptions = inputControl.keyboardOptions,
+            value = text,
+            keyboardOptions = inputControl.keyboardOptions.asCompose(),
             singleLine = inputControl.singleLine,
             label = { Text(text = label) },
             onValueChange = inputControl::onTextChanged,
-            isError = inputControl.error != null,
-            visualTransformation = inputControl.visualTransformation,
+            isError = error != null,
+            visualTransformation = inputControl.visualTransformation.asCompose(),
             modifier = modifier
                 .fillMaxWidth()
                 .focusRequester(focusRequester)
@@ -63,6 +64,6 @@ fun TextField(
                 }
         )
 
-        ErrorText(inputControl.error?.resolve() ?: "")
+        ErrorText(error?.localized() ?: "")
     }
 }

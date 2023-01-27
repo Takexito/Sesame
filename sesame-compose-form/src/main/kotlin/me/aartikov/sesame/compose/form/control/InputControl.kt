@@ -1,20 +1,20 @@
 package me.aartikov.sesame.compose.form.control
 
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.text.input.VisualTransformation
+import dev.icerock.moko.resources.desc.StringDesc
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import me.aartikov.sesame.localizedstring.LocalizedString
+import me.aartikov.sesame.compose.form.options.KeyboardOptions
+import me.aartikov.sesame.compose.form.util.computed
 
 /**
  * Logical representation of an input field. It allows to configure an input field and manage its state from ViewModel.
  */
 class InputControl(
+    coroutineScope: CoroutineScope,
     initialText: String = "",
     val singleLine: Boolean = true,
     val maxLength: Int = Int.MAX_VALUE,
@@ -23,40 +23,38 @@ class InputControl(
     val visualTransformation: VisualTransformation = VisualTransformation.None
 ) : ValidatableControl<String> {
 
-    private var _text by mutableStateOf(correctText(initialText))
+    private val _text = MutableStateFlow(correctText(initialText))
 
     /**
      * Current text.
      */
-    var text: String
+    val text: StateFlow<String>
         get() = _text
-        set(value) {
-            _text = correctText(value)
-        }
 
     /**
      * Is control visible.
      */
-    var visible: Boolean by mutableStateOf(true)
+    val visible: MutableStateFlow<Boolean> = MutableStateFlow(true)
 
     /**
      * Is control enabled.
      */
-    var enabled: Boolean by mutableStateOf(true)
+    val enabled: MutableStateFlow<Boolean> = MutableStateFlow(true)
 
     /**
      * Is control has focus.
      */
-    var hasFocus: Boolean by mutableStateOf(false)
+    val hasFocus: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
     /**
      * Displayed error.
      */
-    override var error: LocalizedString? by mutableStateOf(null)
+    override val error: MutableStateFlow<StringDesc?> = MutableStateFlow(null)
 
-    override val value by ::text
+    override val value: StateFlow<String> = _text
 
-    override val skipInValidation by derivedStateOf { !visible || !enabled }
+    override val skipInValidation =
+        computed(coroutineScope, visible, enabled) { visible, enabled -> !visible || !enabled }
 
     private val mutableScrollToItEventFlow = MutableSharedFlow<Unit>(
         extraBufferCapacity = 1,
@@ -66,19 +64,23 @@ class InputControl(
     val scrollToItEvent get() = mutableScrollToItEventFlow.asSharedFlow()
 
     override fun requestFocus() {
-        this.hasFocus = true
+        this.hasFocus.value = true
         mutableScrollToItEventFlow.tryEmit(Unit)
+    }
+
+    fun setText(text: String) {
+        _text.value = correctText(text)
     }
 
     /**
      * Should be called when text is changed on a view side.
      */
     fun onTextChanged(text: String) {
-        this.text = text
+        _text.value = correctText(text)
     }
 
     fun onFocusChanged(hasFocus: Boolean) {
-        this.hasFocus = hasFocus
+        this.hasFocus.value = hasFocus
     }
 
     private fun correctText(text: String): String {

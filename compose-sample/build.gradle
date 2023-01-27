@@ -68,4 +68,6 @@ dependencies {
     implementation accompanist.swiperefresh
 
     implementation konfetti
+
+    implementation "dev.icerock.moko:resources-compose:0.20.1"
 }

@@ -1,6 +1,5 @@
 package me.aartikov.sesame.compose.form.validation.form
 
-import androidx.compose.runtime.snapshotFlow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
@@ -38,7 +37,7 @@ object ValidateOnFocusLost : FormValidationFeature {
     ) {
         val inputControl = inputValidator.control
 
-        snapshotFlow { inputControl.hasFocus }
+        inputControl.hasFocus
             .drop(1)
             .filter { !it }
             .onEach {
@@ -64,10 +63,10 @@ object RevalidateOnValueChanged : FormValidationFeature {
         validator: ControlValidator<*>
     ) {
         val control = validator.control
-        snapshotFlow { control.value }
+        control.value
             .drop(1)
             .onEach {
-                if (control.error != null) {
+                if (control.error.value != null) {
                     validator.validate()
                 }
             }
@@ -90,10 +89,10 @@ object HideErrorOnValueChanged : FormValidationFeature {
         coroutineScope: CoroutineScope,
         control: ValidatableControl<*>
     ) {
-        snapshotFlow { control.value }
+        control.value
             .drop(1)
             .onEach {
-                control.error = null
+                control.error.value = null
             }
             .launchIn(coroutineScope)
     }

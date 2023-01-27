@@ -8,15 +8,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.material.Checkbox
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import dev.icerock.moko.resources.compose.localized
 import kotlinx.coroutines.flow.collectLatest
 import me.aartikov.sesame.compose.form.control.CheckControl
-import me.aartikov.sesamecomposesample.core.utils.resolve
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -27,6 +25,10 @@ fun CheckboxField(
 ) {
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
 
+    val checked by checkControl.checked.collectAsState()
+    val enabled by checkControl.enabled.collectAsState()
+    val error by checkControl.error.collectAsState()
+
     Column(modifier = modifier.fillMaxWidth()) {
 
         LaunchedEffect(key1 = checkControl) {
@@ -34,22 +36,22 @@ fun CheckboxField(
                 bringIntoViewRequester.bringIntoView()
             }
         }
-
+        
         Row(
             modifier = modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Checkbox(
-                checked = checkControl.checked,
+                checked = checked,
                 onCheckedChange = { checkControl.onCheckedChanged(it) },
-                enabled = checkControl.enabled
+                enabled = enabled
             )
 
             Text(text = label)
         }
 
         ErrorText(
-            checkControl.error?.resolve() ?: "",
+            error?.localized() ?: "",
             paddingValues = PaddingValues(horizontal = 16.dp)
         )
     }

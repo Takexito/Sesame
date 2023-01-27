@@ -1,9 +1,9 @@
 package me.aartikov.sesame.compose.form.validation.control
 
+import dev.icerock.moko.resources.desc.StringDesc
 import me.aartikov.sesame.compose.form.control.CheckControl
 import me.aartikov.sesame.compose.form.validation.form.FormValidatorBuilder
 import me.aartikov.sesame.compose.form.validation.form.checked
-import me.aartikov.sesame.localizedstring.LocalizedString
 
 /**
  * Validator for [CheckControl].
@@ -15,7 +15,7 @@ import me.aartikov.sesame.localizedstring.LocalizedString
 class CheckValidator constructor(
     override val control: CheckControl,
     private val validation: (Boolean) -> ValidationResult,
-    private val showError: ((LocalizedString) -> Unit)? = null
+    private val showError: ((StringDesc) -> Unit)? = null
 ) : ControlValidator<CheckControl> {
 
     override fun validate(displayResult: Boolean): ValidationResult {
@@ -25,18 +25,18 @@ class CheckValidator constructor(
     }
 
     private fun getValidationResult(): ValidationResult {
-        if (control.skipInValidation) {
+        if (control.skipInValidation.value) {
             return ValidationResult.Skipped
         }
 
-        return validation(control.value)
+        return validation(control.value.value)
     }
 
     private fun displayValidationResult(validationResult: ValidationResult) =
         when (validationResult) {
-            ValidationResult.Valid, ValidationResult.Skipped -> control.error = null
+            ValidationResult.Valid, ValidationResult.Skipped -> control.error.value = null
             is ValidationResult.Invalid -> {
-                control.error = validationResult.errorMessage
+                control.error.value = validationResult.errorMessage
                 showError?.invoke(validationResult.errorMessage)
             }
         }

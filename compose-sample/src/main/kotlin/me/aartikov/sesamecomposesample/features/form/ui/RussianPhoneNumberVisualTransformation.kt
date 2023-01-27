@@ -1,19 +1,18 @@
 package me.aartikov.sesamecomposesample.features.form.ui
 
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.input.OffsetMapping
-import androidx.compose.ui.text.input.TransformedText
-import androidx.compose.ui.text.input.VisualTransformation
+import me.aartikov.sesame.compose.form.control.OffsetMapping
+import me.aartikov.sesame.compose.form.control.TransformedText
+import me.aartikov.sesame.compose.form.control.VisualTransformation
 
 object RussianPhoneNumberVisualTransformation : VisualTransformation {
     private const val FIRST_HARDCODE_SLOT = "+7 ("
     private const val SECOND_HARDCODE_SLOT = ") "
     private const val DECORATE_HARDCODE_SLOT = "-"
 
-    override fun filter(text: AnnotatedString): TransformedText {
-        val trimmed = if (text.text.length >= 10) text.text.substring(0..9) else text.text
+    override fun filter(text: String): TransformedText {
+        val trimmed = if (text.length >= 10) text.substring(0..9) else text
         var output = ""
-        if (text.text.isNotEmpty()) output += FIRST_HARDCODE_SLOT
+        if (text.isNotEmpty()) output += FIRST_HARDCODE_SLOT
         for (i in trimmed.indices) {
             output += trimmed[i]
             when (i) {
@@ -42,6 +41,6 @@ object RussianPhoneNumberVisualTransformation : VisualTransformation {
             }
         }
 
-        return TransformedText(AnnotatedString(output), numberOffsetTranslator)
+        return TransformedText(output, numberOffsetTranslator)
     }
 }

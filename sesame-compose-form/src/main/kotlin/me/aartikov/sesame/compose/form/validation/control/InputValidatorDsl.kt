@@ -1,8 +1,9 @@
 package me.aartikov.sesame.compose.form.validation.control
 
-import androidx.annotation.StringRes
+import dev.icerock.moko.resources.StringResource
+import dev.icerock.moko.resources.desc.Resource
+import dev.icerock.moko.resources.desc.StringDesc
 import me.aartikov.sesame.compose.form.control.InputControl
-import me.aartikov.sesame.localizedstring.LocalizedString
 
 class InputValidatorBuilder(
     private val inputControl: InputControl,
@@ -26,7 +27,7 @@ class InputValidatorBuilder(
 /**
  * Adds an arbitrary validation. Validations are processed sequentially until first error.
  */
-fun InputValidatorBuilder.validation(isValid: (String) -> Boolean, errorMessage: LocalizedString) {
+fun InputValidatorBuilder.validation(isValid: (String) -> Boolean, errorMessage: StringDesc) {
     validation {
         if (isValid(it)) {
             ValidationResult.Valid
@@ -41,9 +42,9 @@ fun InputValidatorBuilder.validation(isValid: (String) -> Boolean, errorMessage:
  */
 fun InputValidatorBuilder.validation(
     isValid: (String) -> Boolean,
-    @StringRes errorMessageRes: Int
+    errorMessageRes: StringResource
 ) {
-    validation(isValid, LocalizedString.resource(errorMessageRes))
+    validation(isValid, StringDesc.Resource(errorMessageRes))
 }
 
 /**
@@ -51,7 +52,7 @@ fun InputValidatorBuilder.validation(
  */
 fun InputValidatorBuilder.validation(
     isValid: (String) -> Boolean,
-    errorMessage: () -> LocalizedString
+    errorMessage: () -> StringDesc
 ) {
     validation {
         if (isValid(it)) {
@@ -65,7 +66,7 @@ fun InputValidatorBuilder.validation(
 /**
  * Adds a validation that checks that an input is not blank.
  */
-fun InputValidatorBuilder.isNotBlank(errorMessage: LocalizedString) {
+fun InputValidatorBuilder.isNotBlank(errorMessage: StringDesc) {
     validation(
         isValid = { it.isNotBlank() },
         errorMessage
@@ -75,14 +76,14 @@ fun InputValidatorBuilder.isNotBlank(errorMessage: LocalizedString) {
 /**
  * Adds a validation that checks that an input is not blank.
  */
-fun InputValidatorBuilder.isNotBlank(@StringRes errorMessageRes: Int) {
-    isNotBlank(LocalizedString.resource(errorMessageRes))
+fun InputValidatorBuilder.isNotBlank(errorMessageRes: StringResource) {
+    isNotBlank(StringDesc.Resource(errorMessageRes))
 }
 
 /**
  * Adds a validation that checks that an input matches [regex].
  */
-fun InputValidatorBuilder.regex(regex: Regex, errorMessage: LocalizedString) {
+fun InputValidatorBuilder.regex(regex: Regex, errorMessage: StringDesc) {
     validation(
         isValid = { regex.matches(it) },
         errorMessage
@@ -92,14 +93,14 @@ fun InputValidatorBuilder.regex(regex: Regex, errorMessage: LocalizedString) {
 /**
  * Adds a validation that checks that an input matches [regex].
  */
-fun InputValidatorBuilder.regex(regex: Regex, @StringRes errorMessageRes: Int) {
-    regex(regex, LocalizedString.resource(errorMessageRes))
+fun InputValidatorBuilder.regex(regex: Regex, errorMessageRes: StringResource) {
+    regex(regex, StringDesc.Resource(errorMessageRes))
 }
 
 /**
  * Adds a validation that checks that an input has at least given number of symbols.
  */
-fun InputValidatorBuilder.minLength(length: Int, errorMessage: LocalizedString) {
+fun InputValidatorBuilder.minLength(length: Int, errorMessage: StringDesc) {
     validation(
         isValid = { it.length >= length },
         errorMessage
@@ -109,16 +110,16 @@ fun InputValidatorBuilder.minLength(length: Int, errorMessage: LocalizedString) 
 /**
  * Adds a validation that checks that an input has at least given number of symbols.
  */
-fun InputValidatorBuilder.minLength(length: Int, @StringRes errorMessageRes: Int) {
-    minLength(length, LocalizedString.resource(errorMessageRes))
+fun InputValidatorBuilder.minLength(length: Int, errorMessageRes: StringResource) {
+    minLength(length, StringDesc.Resource(errorMessageRes))
 }
 
 /**
  * Adds a validation that checks that an input equals to an input of another input control.
  */
-fun InputValidatorBuilder.equalsTo(inputControl: InputControl, errorMessage: LocalizedString) {
+fun InputValidatorBuilder.equalsTo(inputControl: InputControl, errorMessage: StringDesc) {
     validation(
-        isValid = { it == inputControl.value },
+        isValid = { it == inputControl.value.value },
         errorMessage
     )
 }
@@ -126,6 +127,6 @@ fun InputValidatorBuilder.equalsTo(inputControl: InputControl, errorMessage: Loc
 /**
  * Adds a validation that checks that an input equals to an input of another input control.
  */
-fun InputValidatorBuilder.equalsTo(inputControl: InputControl, errorMessageRes: Int) {
-    equalsTo(inputControl, LocalizedString.resource(errorMessageRes))
+fun InputValidatorBuilder.equalsTo(inputControl: InputControl, errorMessageRes: StringResource) {
+    equalsTo(inputControl, StringDesc.Resource(errorMessageRes))
 }
