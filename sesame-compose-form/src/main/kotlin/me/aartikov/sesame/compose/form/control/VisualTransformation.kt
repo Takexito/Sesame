@@ -30,20 +30,8 @@ fun interface VisualTransformation {
  *
  * @param mask The mask character used instead of original text.
  */
-class PasswordVisualTransformation(val mask: Char = '\u2022') :
-    VisualTransformation {
+data class PasswordVisualTransformation(val mask: Char = '\u2022') : VisualTransformation {
     override fun filter(text: String): TransformedText {
         return TransformedText(mask.toString().repeat(text.length), OffsetMapping.Identity)
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is PasswordVisualTransformation) return false
-        if (mask != other.mask) return false
-        return true
-    }
-
-    override fun hashCode(): Int {
-        return mask.hashCode()
     }
 }
