@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import dev.icerock.moko.resources.compose.localized
 import kotlinx.coroutines.flow.collectLatest
 import me.aartikov.sesame.compose.form.control.CheckControl
 
@@ -50,7 +51,7 @@ fun CheckboxField(
         }
 
         ErrorText(
-            error ?: "",
+            error?.localized() ?: "",
             paddingValues = PaddingValues(horizontal = 16.dp)
         )
     }

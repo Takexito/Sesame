@@ -3,6 +3,9 @@ package me.aartikov.sesamecomposesample.features.form.ui
 import android.util.Patterns
 import androidx.annotation.ColorRes
 import com.arkivanov.decompose.ComponentContext
+import dev.icerock.moko.resources.StringResource
+import dev.icerock.moko.resources.desc.ResourceFormatted
+import dev.icerock.moko.resources.desc.StringDesc
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import me.aartikov.sesame.compose.form.options.ImeAction
@@ -90,42 +93,48 @@ class RealFormComponent(
         )
 
         input(nameInput) {
-            isNotBlank("R.string.field_is_blank_error_message")
+            isNotBlank(StringResource(R.string.field_is_blank_error_message))
         }
 
         input(emailInput, required = false) {
-            isNotBlank("R.string.field_is_blank_error_message")
-            regex(Patterns.EMAIL_ADDRESS.toRegex(), "R.string.invalid_email_error_message")
+            isNotBlank(StringResource(R.string.field_is_blank_error_message))
+            regex(
+                Patterns.EMAIL_ADDRESS.toRegex(),
+                StringResource(R.string.invalid_email_error_message)
+            )
         }
 
         input(phoneInput) {
-            isNotBlank("R.string.field_is_blank_error_message")
+            isNotBlank(StringResource(R.string.field_is_blank_error_message))
             validation(
                 { str ->
                     str.count { it.isDigit() } == RUS_PHONE_DIGIT_COUNT
                 },
-                "R.string.invalid_phone_error_message"
+                StringResource(R.string.invalid_phone_error_message)
             )
         }
 
         input(passwordInput) {
-            isNotBlank("R.string.field_is_blank_error_message")
+            isNotBlank(StringResource(R.string.field_is_blank_error_message))
             minLength(
                 PASSWORD_MIN_LENGTH,
-                "LocalizedString.resource(R.string.min_length_error_message, PASSWORD_MIN_LENGTH)"
+                StringDesc.ResourceFormatted(
+                    StringResource(R.string.min_length_error_message),
+                    PASSWORD_MIN_LENGTH
+                )
             )
             validation(
                 { str -> str.any { it.isDigit() } },
-                "LocalizedString.resource(R.string.must_contain_digit_error_message)"
+                StringResource(R.string.must_contain_digit_error_message)
             )
         }
 
         input(confirmPasswordInput) {
-            isNotBlank("R.string.field_is_blank_error_message")
-            equalsTo(passwordInput, "R.string.passwords_do_not_match_error_message")
+            isNotBlank(StringResource(R.string.field_is_blank_error_message))
+            equalsTo(passwordInput, StringResource(R.string.passwords_do_not_match_error_message))
         }
 
-        checked(termsCheckBox, "R.string.terms_are_accepted_error_message")
+        checked(termsCheckBox, StringResource(R.string.terms_are_accepted_error_message))
     }
 
     private val dynamicResult = coroutineScope.dynamicValidationResult(formValidator)

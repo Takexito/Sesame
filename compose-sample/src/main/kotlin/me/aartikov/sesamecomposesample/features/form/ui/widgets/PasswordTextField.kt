@@ -18,6 +18,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import dev.icerock.moko.resources.compose.localized
 import kotlinx.coroutines.flow.collectLatest
 import me.aartikov.sesame.compose.form.control.InputControl
 import me.aartikov.sesamecomposesample.features.form.ui.asCompose
@@ -88,6 +89,6 @@ fun PasswordTextField(
                 }
         )
 
-        ErrorText(inputControl.error.value ?: "")
+        ErrorText(inputControl.error.value?.localized() ?: "")
     }
 }

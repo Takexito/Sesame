@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import dev.icerock.moko.resources.compose.localized
 import kotlinx.coroutines.flow.collectLatest
 import me.aartikov.sesame.compose.form.control.InputControl
 import me.aartikov.sesamecomposesample.features.form.ui.asCompose
@@ -63,6 +64,6 @@ fun TextField(
                 }
         )
 
-        ErrorText(error ?: "")
+        ErrorText(error?.localized() ?: "")
     }
 }
